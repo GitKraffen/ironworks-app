@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="it" data-framework="backbonejs">
+<head>
+    <meta charset="utf-8">
+    <title>Backbone.js testing</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/joint.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Ironworks</h1>
+
+        <div class="clear"></div>
+    </header>
+
+    <section class="main">
+    </section>
+
+    <footer class="info">
+        <p>GitKraffen</p>
+    </footer>
+
+    <!-- LANDING PAGE -->
+    <script type="text/template" id="landing-page-view">
+        <button class="btn-base new-project">Nuovo progetto</button>
+        <button class="btn-base btn-blue load-project">Carica progetto</button>
+        <div class="clear"></div>
+
+        <div class="set-project-name full-screen hidden">
+            <input type="text" placeholder="Nome progetto" class="set-project-name-val" />
+            <button class="set-project-name-send btn-base">Crea</button>
+
+            <button class="btn-base btn-grey back">Indietro</button>
+        </div>
+
+        <div class="load-project-file full-screen hidden">
+            <input type="file" placeholder="Progetto .pro" class="set-project-file" id="project-file" accept=".pro" />
+            <label for="project-file" class="set-project-file-label">Seleziona file</label>
+            <button class="set-project-file-send btn-base">Carica</button>
+
+            <button class="btn-base btn-grey back">Indietro</button>
+        </div>
+    </script>
+    <!-- END LANDING PAGE -->
+
+    <!-- EDITOR -->
+    <script type="text/template" id="editor-view">
+        <div class="full-row">
+            <input type="text" class="project-name" value="Mio progetto" />
+            <button class="btn-base save-export">Salva progetto</button>
+            <button class="btn-base compile-code">Compila</button>   <!-- bottone complaz-->
+        </div>
+        <div class="full-row border-bottom breadcrumbs">
+            <span class="element-parent">parent</span>
+            <input type="text" class="selected-element" value="element" />
+            <button class="btn-base btn-red delete-element">Elimina</button>
+            <button class="btn-base btn-grey exit-zoom hidden">Indietro</button>
+        </div>
+        <div class="full-row margin-top editor-container">
+            <div class="toolbar toolbar-elements">
+            </div>
+            <div class="editor"></div>
+            <div class="toolbar toolbar-data">
+            </div>
+        </div>
+        <div class="export-project-page full-screen hidden">
+            <button class="btn-base save-project">Salva file .pro</button>
+            <button class="btn-base btn-blue export-project">Esporta progetto</button>
+
+            <button class="btn-base btn-grey back">Indietro</button>
+        </div>
+    </script>
+
+    <script type="text/template" id="toolbar-element-view">
+        <div class="new-element"><img src="image/actor.svg" data-element="actor" /></div>
+        <div class="new-element"><img src="image/boundary.svg" data-element="boundary" /></div>
+        <div class="new-element"><img src="image/control.svg" data-element="control" /></div>
+        <div class="new-element"><img src="image/entity.svg" data-element="entity" /></div>
+        <div class="new-element"><img src="image/link.svg" data-element="link" /></div>
+        <div class="new-element"><img src="image/entity.svg" data-element="subEntity" /></div>
+    </script>
+
+    <script type="text/template" id="toolbar-data-view">
+        <div class="full-row">
+            <button class="btn-base new-field">Nuovo campo</button>
+
+        </div>
+        <ul class="fields-container full-row">
+        </ul>
+    </script>
+
+    <script type="text/template" id="field-view">
+        <!--<li class="field-row full-row">-->
+            <input type="text" class="field-name" value="nome" title="Nome campo" />
+            <button class="btn-base btn-red field-remove">X</button>
+            <select class="field-type" title="Tipo campo">
+                <option value="string" selected>String</option>
+                <option value="int">Int</option>
+            </select>
+            <input type="text" class="field-length" value="255" title="Lunghezza campo" />
+
+            <div class="clear"></div>
+            <div class="full-row float-left property-row">
+                <input type="checkbox" class="field-property" id="<%= fieldNumber %>-primarykey" name="primarykey" value="primaryKey" title="Primary key">
+                <label class="field-label" for="<%= fieldNumber %>-primarykey">PK</label>
+                <input type="checkbox" class="field-property" id="<%= fieldNumber %>-notnull" name="notnull" value="notNull" title="Not null">
+                <label class="field-label" for="<%= fieldNumber %>-notnull">NN</label>
+                <input type="checkbox" class="field-property" id="<%= fieldNumber %>-autoincrement" name="autoincrement" value="autoIncrement" title="Auto increment">
+                <label class="field-label" for="<%= fieldNumber %>-autoincrement">AI</label>
+                <input type="checkbox" class="field-property" id="<%= fieldNumber %>-defaultcheck" name="default" value="defaultCheck" title="Default">
+                <label class="field-label" for="<%= fieldNumber %>-defaultcheck">Def</label>
+            </div>
+            <input type="text" class="field-default" value="defaultText" title="Default value" />
+            <div class="field-end"></div>
+        <!--</li>-->
+    </script>
+    <!--  END EDITOR -->
+
+    <!--  EXPORT
+    <script type="text/template" id="export-page-view">
+        <button class="btn-base save-project">Salva progetto</button>
+        <button class="btn-base btn-blue export-project">Esporta progetto</button>
+        <div class="clear"></div>
+    </script>
+    <!--  END EXPORT -->
+
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/underscore.js"></script>
+    <script src="js/lib/lodash.js"></script>
+    <script src="js/lib/backbone.js"></script>
+    <script src="js/lib/joint.js"></script>
+
+    <script src="js/models/appStates.js"></script>
+    <script src="js/models/attributeType.js"></script>
+    <script src="js/models/attribute.js"></script>
+    <script src="js/models/baseEntity.js"></script>
+    <script src="js/models/elementType.js"></script>
+    <script src="js/models/entity.js"></script>
+    <script src="js/models/subEntity.js"></script>
+
+    <script src="js/collections/attributes.js"></script>
+    <script src="js/collections/entities.js"></script>
+    <script src="js/collections/subEntities.js"></script>
+
+    <script src="js/views/appView.js"></script>
+    <script src="js/views/dataToolbarView.js"></script>
+    <script src="js/views/elementToolbarView.js"></script>
+    <script src="js/views/exportView.js"></script>
+    <script src="js/views/fieldView.js"></script>
+    <script src="js/views/homeView.js"></script>
+    <script src="js/views/robustnessDiagramView.js"></script>
+
+    <script src="js/helper.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

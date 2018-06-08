@@ -1,0 +1,410 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+.spacer10 {
+    margin: 10px 0;
+    width: 100%;
+    float: left;
+}
+.clear {
+    clear: both;
+}
+/* ------FINE RESET------- */
+
+/* Base structure */
+@font-face {
+    font-family: 'simplificasimplifica';
+    src: url('font/simplifica-webfont.woff2') format('woff2'),
+    url('font/simplifica-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+input {
+    font-family: simplificasimplifica;
+    font-size: 22px;
+    border: 0;
+    padding: 5px 15px;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.05);
+    /*-webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;*/
+}
+
+body {
+    font-family: simplificasimplifica;
+    font-size: 22px;
+}
+
+.header {
+    width: calc(100% - 50px);
+    /*background-color: rgba(0,150,255, 0.15);*/
+    background-color: #afeeee;
+    font-size: 40px;
+    padding: 5px 25px;
+}
+
+.main {
+    width: calc(100% - 20px);
+    padding: 5px 10px;
+    position: relative;
+}
+
+.full {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.full-row {
+    display: inline-block;
+    width: 100%;
+}
+
+.float-left {
+    float: left;
+}
+
+.btn-base {
+    background: none;
+    border: 0;
+    font-family: simplificasimplifica;
+    font-size: 30px;
+    background-color: rgba(200,255,200, 1);
+    padding: 5px 20px;
+    opacity: 0.7;
+    cursor: pointer;
+}
+.btn-base:hover {
+    opacity: 1;
+}
+
+.btn-red {
+    background-color: rgba(255,200,200, 1);
+    font-size: 22px;
+}
+
+.btn-grey {
+    background-color: rgba(220,220,220, 1);
+}
+
+.btn-blue {
+    background-color: rgba(120,220,255, 1);
+}
+
+.back {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.margin-top {
+    margin-top: 10px;
+}
+
+footer {
+    width: 100%;
+    background-color: #444444;
+    color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 25px;
+}
+
+.hidden:not(.show) {
+    display: none;
+}
+
+.header h1 {
+    float: left;
+}
+
+.header .save-export {
+    float:right;
+    height: 40px;
+}
+
+.compile-code{
+    margin: 0 1em;
+}
+
+/* END Base structure */
+
+/* landing page */
+.new-project, .load-project {
+    opacity: 0.50;
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    float: left;
+    height: 100%;
+    font-size: 50px ;
+}
+.new-project:hover, .load-project:hover {
+    opacity: 0.9;
+}
+
+.full-screen {
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
+
+.set-project-name-val,
+.set-project-file-label {
+    display: block;
+    margin: auto;
+    margin-top: 100px;
+    min-width: 500px;
+    text-align: center;
+    font-size: 40px;
+}
+
+.set-project-file {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.set-project-name-send,
+.set-project-file-send {
+    display: block;
+    font-size: 40px;
+    width: 530px;
+    margin: 10px auto 0 auto;
+}
+/* END landing page */
+
+/* editor structure */
+.project-name {
+    font-size: 30px;
+    margin-bottom: 5px;
+    /*width: calc(100% - 30px);*/
+    float: left;
+}
+
+.save-project, .export-project {
+    opacity: 0.50;
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    float: left;
+    height: 100%;
+    font-size: 50px ;
+}
+
+.element-parent {
+    margin-left: 15px;
+}
+.element-parent:after {
+    padding-left: 15px;
+    content: ' >';
+}
+
+.selected-element {
+    background-color: transparent;
+    border-radius: 0;
+    width: 500px;
+}
+
+
+.delete-element {
+    float: right;
+    font-size: 30px;
+}
+.exit-zoom {
+    float: right;
+}
+
+.toolbar{
+    float: left;
+    width: 220px;
+    padding: 10px 15px;
+}
+
+.toolbar-elements {
+    width: 180px;
+}
+
+.toolbar-data {
+    max-height: 100%;
+    overflow-y: auto;
+}
+.editor-container:not(.zoom-mode) .toolbar-data {
+    display: none;
+}
+
+.editor {
+    float: left;
+    min-height: 100px;
+    width: calc(98% - 210px);
+    background-color: rgba(240,240,240,0.5);
+    border: 1px solid black;
+}
+
+.editor-container.zoom-mode .editor {
+    width: calc(99% - 460px);
+}
+
+.new-element {
+    width: 70px;
+    height: 70px;
+    padding: 10px;
+    float: left;
+    cursor: pointer;
+}
+
+.new-element img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.new-element img.disabled {
+    opacity: 0.6;
+}
+.new-element:hover img:not(.disabled) {
+    margin: -10px;
+    max-width: calc(100% + 20px);
+    max-height: calc(100% + 20px);
+    width: calc(100% + 20px);
+    height: calc(100% + 20px);
+}
+
+.new-field {
+    float: right;
+    margin: 0 0.8em;
+}
+
+.fields-container {
+    display: inline-block;
+    width: 100%;
+}
+
+.field-row {
+    display: inline-block;
+    width: 100%;
+    margin: 0.1em 0 0.15em 0;
+}
+
+.field-name {
+    width: calc(100% - 90px);
+}
+.field-default {
+    width: calc(100% - 30px);
+}
+
+.field-type {
+    font-family: simplificasimplifica;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-color: #f0f0f0;
+    width: 70%;
+    text-align-last: center;
+    padding: 5px 0;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.field-length {
+    width: calc(30% - 40px);
+}
+
+.property-row {
+    margin: 5px 0;
+}
+
+.field-property {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+}
+
+.field-label {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    width: 25%;
+    color: #999;
+    line-height: 50px;
+    text-align: center;
+    float: left;
+}
+.field-label:hover {
+    color: #444;
+    font-size: 25px;
+}
+.field-label.checked {
+    font-weight: bold;
+    font-size: 25px;
+    color: #444;
+    background-color: rgba(200,255,200, 1);
+}
+
+.field-end {
+    float: left;
+    width: 100%;
+    height: 1px;
+    background-color: #afeeee;
+    margin-top: 5px;
+}
+/* END editor structure */
