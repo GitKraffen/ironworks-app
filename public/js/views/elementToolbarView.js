@@ -2,7 +2,7 @@
 /*jshint unused:false */
 var app = app || {};
 
-(function () {
+(function ($) {
     'use strict';
 
     app.ElementToolbarView = Backbone.View.extend({
@@ -10,7 +10,7 @@ var app = app || {};
         template: _.template($('#toolbar-element-view').html()),
 
         events: {
-            'click .new-element': 'eventElementSelect'
+            'click .clickable': 'eventElementSelect'
         },
 
         initialize: function() {
@@ -24,6 +24,19 @@ var app = app || {};
             this.$subEntity = this.$('[data-element="subEntity"]');
             this.$link = this.$('[data-element="link"]');
 
+            let draggables = this.$('.new-element.draggable').draggable({helper: "clone"});
+
+            draggables.bind('dragstop', function(event, ui) {
+                let element = $(event.target);
+                if (!element.hasClass('new-element'))
+                    element = element.parent();
+                this.trigger('newElement', {
+                    elementType: element.data('element'),
+                    posX: event.clientX,
+                    posY: event.clientY
+                });
+            }.bind(this));
+
             this.manageElements(true, true, true, true, true, false);
         },
 
@@ -32,8 +45,15 @@ var app = app || {};
         },
 
         eventElementSelect: function (e) {
-            if (!$(e.target).hasClass('disabled'))
-                this.trigger('newElement', $(e.target).data('element'));
+            let element = $(e.target);
+            if (!element.hasClass('new-element'))
+                element = element.parent();
+            if (!element.hasClass('disabled'))
+                this.trigger('newElement', {
+                    elementType: element.data('element'),
+                    posX: 0,
+                    posY: 0
+                });
         },
 
         manageElements: function (actor, boundary, control, entity, link, subEnetity) {
@@ -51,4 +71,4 @@ var app = app || {};
             else this.$subEntity.addClass('disabled');
         }
     });
-})();
+})(jQuery);

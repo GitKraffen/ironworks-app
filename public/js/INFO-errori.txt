@@ -1,0 +1,33 @@
+Per la gestione degli errori ho pensato di strutturare la faccenda in questo modo:
+ - Avremo una VISTA "app.errorView" globale già inizializzata (ovvero basta chiamarla con app.errorView.metodCheVuoi)
+ - Una VISTA per le righe degli errori, ovvero, la vista precedente è la principale (contenitore), queste sono le righe.
+ - Una CLASSE normale per FIXARE gli errori, anche questa già inizializzata in app.errorFixer
+
+ORA... per gestire gli errori si fa così:
+    - aggiungo un nuovo errore chiamando app.errorView.newError(errID, target);
+        errID: id dell'errore, definito in errorFixer (es. EG01)
+        targer: se presente, l'oggetto in questione, tipo un model o collection
+
+    - Aggiungo tutti gli errori vari come da punto precedente
+
+    - chiamo app.errorView.show()
+
+    - Ora l'utente ha la lista degli errori visibile e potrà fixarli premendo il tasto correlato
+
+
+
+
+PER AGGIUNGERE un nuovo errore:
+    mi reco in errorFixer.js e aggiungo un errore in "this.errors", all'interno del constructor
+
+    esempio:
+        'EG01': {
+             'name' : 'Errore grafico 01',
+             'description' : 'Descrizione test',
+             'solution' : function(params) {
+                 // metti qui il codice per fixare il problema
+                 // se non ha soluzioni metti "false" al posto della funzione
+                 console.log('Fixed err: ' + this.name);
+                 console.log(params);
+             }
+         }

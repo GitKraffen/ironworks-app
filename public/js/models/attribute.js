@@ -1,4 +1,4 @@
-var app = app || {};
+    var app = app || {};
 
 (function () {
     'use strict';
@@ -6,9 +6,9 @@ var app = app || {};
     //Attribute Model
     app.Attribute = Backbone.Model.extend({
         defaults: {
-            name:'',
-            type:'',
-            length: 10, //TODO: Lunghezza a seconda del campo
+            name:'attribute',
+            type: 'varchar',
+            length: '64',
             primaryKey:false,
             uniqueKey:false,
             notNull:false,

@@ -7,13 +7,10 @@ var app = app || {};
         tagName: 'div',
         graph: false,
         paper: false,
-        resources: {},
-        queueElements: {},
-        processing: 0,
+		dragStartPosition: {},
 
         initialize: function(disabled = false) {
-            this.initializeEditor(disabled)
-            //this.$el.html(this.template);
+            this.initializeEditor(disabled);
         },
 
         render: function() {
@@ -24,8 +21,34 @@ var app = app || {};
             return this.graph;
         },
 
-        fromJSON: function(json) {
-            this.graph.fromJSON(json);
+        getOffset: function() {
+            var offset = this.$el.offset();
+            return {x: offset.left, y: offset.top};
+        },
+
+        getSize: function() {
+            return {width: this.$el.width(), height: this.$el.height()};
+        },
+      
+        getEntity: function(name) {
+            return this.graph.get('cells').where({elementType: "entity", name: name });
+        },
+
+        getEntities: function() {
+            let asArray = this.graph.get('cells').where({elementType: "entity"});
+            let toReturn = new app.Entities();
+            asArray.forEach(function (entity) {
+                toReturn.add(entity);
+            });
+            return toReturn;
+        },
+
+        getEntitiesJSON: function() {
+            return this.getEntities().toJSON();
+        },
+
+        fromJSON: function(json, opt) {
+            this.graph.fromJSON(json, opt);
         },
 
         setPaperDimensions: function(x, y) {
@@ -35,37 +58,66 @@ var app = app || {};
         eventSelectElement: function(cellView, evt, x, y) {
             this.trigger('selectElement', cellView);
         },
-
+		
         eventDoubleClick: function(cellView, evt, x, y) {
             this.trigger('enterZoom', cellView);
         },
 
-        newElement: function(type, name, x = 0, y = 0) {
-            // If resource is not jet loaded we put this element in element's queue
-            if (!(type in this.resources)){
-                console.log(type + " not yet loaded...");
-                this.queueElements.push({
-                    'elem': type,
-                    'x': x,
-                    'y': y,
-                    'name': name});
-                return false;
+		eventPointerDown: function(event, x, y){
+			this.dragStartPosition = { x: x, y: y};
+			//this.trigger('pointerdown',event,x,y);
+		},
+		eventPointerUp: function(event,x,y){
+			delete this.dragStartPosition;
+			//this.trigger('pointerup',event,x,y);
+		},
+		eventDrag: function(event,x,y){
+			
+			this.time = false;
+				let xdrag = this.dragStartPosition.x;
+				let ydrag = this.dragStartPosition.y;
+				let gra	  = this.getGraph();
+				gra.translate(x-xdrag,y-ydrag);
+				this.dragStartPosition = { x: x, y: y};
+			//this.trigger('drag',event,x,y);
+		},
+		
+		newElement: function(type, name, x = 0, y = 0) {
+            let newElement;
+            switch (type) {
+                case 'actor':
+                    newElement = joint.shapes.basic.Actor.new(name, x, y);
+                    break;
+                case 'boundary':
+                    newElement = joint.shapes.basic.Boundary.new(name, x, y);
+                    break;
+                case 'control':
+                    newElement = joint.shapes.basic.Control.new(name, x, y);
+                    break;
+                case 'entity':
+                    newElement = joint.shapes.basic.Entity.new(name, x, y);
+                    break;
+                case 'subEntity':
+                    newElement = joint.shapes.basic.SubEntity.new(name, x, y);
+                    break;
+                default:
+                    console.log('Errore, non posso inserire: '.type);
+                    return;
             }
-
-            // TODO: generate ID ??
-            // TODO: check if ID already inside graph
-            // TODO: Name of the element --- if entity it must be unique!!
-
-            // Clone base resource but change position with requested.
-            let newElement = this.resources[type].clone().position(0, 0);
-            newElement.attributes.attrs.text.text = name;
-            newElement.attributes.position.x = x;
-            newElement.attributes.position.y = y;
+            newElement.setName(name);
             // Add new element in graph
             this.graph.addCells( newElement );
             return newElement;
         },
 
+        addElement: function(element, x, y) {
+            element.position(x, y);
+            // Add new element in graph
+            this.graph.addCells( element );
+            return element;
+        },
+		
+		//Link Normale Robustness Diagram
         newLink: function(element1, element2) {
             // If same element just say it to user and ignore this link
 
@@ -73,10 +125,14 @@ var app = app || {};
 
                 if (element1.model.id === element2.model.id) {
                     // Error same element
-                    console.log('Errore nel collegamento');
+                    app.errorView.clear();
+                    app.errorView.newError('G.General.2', false);
+                    app.errorView.show();
+                    app.router.currentView.render();
                 } else {
                     // Creating link between two selected elements
-                    let link = new joint.shapes.devs.Link({
+                    console.log('creata base');
+                    let link = new joint.shapes.standard.BasicLink({
                         source: {
                             id: element1.model.id,
                             port: 'out'
@@ -84,98 +140,61 @@ var app = app || {};
                         target: {
                             id: element2.model.id,
                             port: 'in'
-                        },
-                        connector: {name: 'rounded'}
+                        }
                     });
 
                     // Adding link to graph
                     this.graph.addCell(link);
+                    link.toBack();
+                    link.attr('line/stroke', '#5654a0');
+
                     return true;
                 }
             }
             return false;
         },
+		
+		//Link Zoom con relazione 1-1 o 1-N
+		newLinkZoom: function(element1, element2) {
+            // If same element just say it to user and ignore this link
 
-        removeElement: function(name) {
-            // remove? i think this can be made by appView!
-        },
+            if(helper.areLinkable(element1, element2)) {
 
-        loadResources: function() {       // Increase process counter, until this resource is loaded we won't start editor
-            this.processing = 4;
-            // Load svg resource, when is loaded call setResource(...)
-            $.get('./image/boundary.svg', function(ret){
-                // Decrease process counting, this res is loaded
-                this.processing--;
-                this.setResource("boundary", ret)
-            }.bind(this), 'text');
+                if (element1.model.id === element2.model.id) {
+                    // Error same element
+                    app.errorView.clear();
+                    app.errorView.newError('G.General.2', false);
+                    app.errorView.show();
+                    app.router.currentView.render();
+                } else {
+                    // Creating link between two selected elements
+                    let link = new joint.shapes.standard.RelationLink({
+                        source: {
+                            id: element1.model.id,
+                            port: 'out'
+                        },
+                        target: {
+                            id: element2.model.id,
+                            port: 'in'
+                        }
+                    });
+                    link.attr({
+                        '.connection': { stroke: '#3c4260', 'stroke-width': 1 }
+                    });
+                    // Adding link to graph
+                    this.graph.addCell(link);
+                    link.toBack();
 
-            $.get('./image/actor.svg', function(ret){
-                this.processing--;
-                this.setResource("actor", ret)
-            }.bind(this), 'text');
-
-            $.get('./image/control.svg', function(ret){
-                this.processing--;
-                this.setResource("control", ret)
-            }.bind(this), 'text');
-
-            $.get('./image/entity.svg', function(ret){
-                this.processing--;
-                this.setResource("entity", ret)
-            }.bind(this), 'text');
-
-            $.get('./image/entity.svg', function(ret){
-                this.processing--;
-                this.setResource("subEntity", ret)
-            }.bind(this), 'text');
-        },
-
-        setResource:function(name, res) {
-            // Create JointJs element and save in collector of editor's base elements
-            this.resources[name] = new joint.shapes.basic.Image({
-                // Size of the element
-                size: {
-                    width: 100,
-                    height: 100
-                },
-                // Position of the element
-                position: {
-                    x: 0,
-                    y: 0
-                },
-                attrs: {
-                    // This is what user see, so size, image, and aspect ratio.
-                    image: {
-                        width: 100,
-                        height: 100,
-                        'xlink:href': 'data:image/svg+xml;utf8,' + encodeURIComponent(res),
-                        preserveAspectRatio: 'xMinYMin slice'
-                    },
-                    // Text under element
-                    text: { 'font-size': 14, 'ref-x': .5, 'ref-y': -2, ref: 'image', 'y-alignment': 'middle', 'x-alignment': 'middle', 'text': name },
-                    // Type
-                    elementType: {name: name}
-                }
-            });
-
-            // We have to set an input and output port for linking...
-            this.resources[name].set('inPorts', ['in']);
-            this.resources[name].set('outPorts', ['out']);
-
-            // if no more process are running we can load queued elements
-            if (this.processing === 0) {
-                if (this.queueElements.length > 0) {
-                    for (let key in this.queueElements) {
-                        let el = this.queueElements[key];
-                        this.newElement(el.elem, el.x, el.y, el.name);
-                    }
+                    return link;
                 }
             }
+            return false;
         },
 
         initializeEditor: function(disabled = false) {
             let element = this.$el;
             // Initializing
+
             this.graph = new joint.dia.Graph;
             this.paper = new joint.dia.Paper({
                 el: this.$el,
@@ -183,6 +202,7 @@ var app = app || {};
                 height: element.height(),
                 gridSize: 5,
                 model: this.graph,
+                //linkView: CustomLinkView,
                 linkPinning: false,
                 interactive: (disabled ? false : {
                     vertexAdd: false,
@@ -194,7 +214,42 @@ var app = app || {};
             this.paper.on('cell:pointerclick', function(cellView){this.eventSelectElement(cellView)}.bind(this));
             this.paper.on('cell:pointerdblclick', function(cellView){this.eventDoubleClick(cellView)}.bind(this));
 
-            this.loadResources();
+            this.paper.on('blank:pointermove',function(event, x, y) {this.eventDrag(event,x,y);}.bind(this));
+            this.paper.on('blank:pointerdown',function(event, x, y) {this.eventPointerDown(event,x,y);}.bind(this));
+            this.paper.on('blank:pointerup',  function(event, x, y) {this.eventPointerUp(event,x,y);}.bind(this));
+        },
+
+        getLinksOfElement: function(element) {
+            return this.graph.getConnectedLinks(element.model);
+        },
+
+        unhighlight: function(){
+            let papz = this.paper;
+            _.each(this.getGraph().getCells(), function(el){
+                let t = papz.findViewByModel(el);
+                if (["standard.BasicLink"].includes(el.getType())){
+                    t.model.unHighlightLink();
+                }
+                else{
+                    t.unhighlight();
+                    t.highlighted = false;
+                }
+
+            });
+        },
+
+        highlight:function(element){
+            this.unhighlight();
+            element.highlight();
+            element.highlighted = true;
+        },
+
+        checkLink:function (element){
+            let links = this.getLinksOfElement(element);
+            if(links.length > 0){
+                return false;
+            }
+            return true;
         }
     });
 })(jQuery);

@@ -15,9 +15,8 @@ app.use(session({
 }))*/
 
 // We must set base server configs, like ip and port
-const hostname = '127.0.0.1';
+const hostname = '0.0.0.0';
 const port = 3000;
-var resourcesPath = __dirname + '/public/';
 
 // We will set a public folder for public resources called "public"
 app.use(express.static('public'));
@@ -25,7 +24,7 @@ app.use(express.static('public'));
 // Enable parser of json request
 app.use(bodyParser.json());
 
-sp = new ServerPresentation('127.0.0.1', 3000);
+sp = new ServerPresentation(hostname, port);
 sp.startServer(hostname, port);
 sp.requestHandler();
 

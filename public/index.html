@@ -2,7 +2,8 @@
 <html lang="it" data-framework="backbonejs">
 <head>
     <meta charset="utf-8">
-    <title>Backbone.js testing</title>
+    <title>Ironworks - Gitkraffen</title>
+    <link rel="shortcut icon" type="image/ico" href="/fav.ico"/>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/joint.css">
 </head>
@@ -27,10 +28,12 @@
         <div class="clear"></div>
 
         <div class="set-project-name full-screen hidden">
-            <input type="text" placeholder="Nome progetto" class="set-project-name-val" />
-            <button class="set-project-name-send btn-base">Crea</button>
+            <form class="new-project-form">
+                <input type="text" placeholder="Nome progetto" class="set-project-name-val" />
+                <button type="submit" class="set-project-name-send btn-base">Crea</button>
+            </form>
 
-            <button class="btn-base btn-grey back">Indietro</button>
+            <button class="btn-base btn-grey back">&#8592;</button>
         </div>
 
         <div class="load-project-file full-screen hidden">
@@ -38,7 +41,7 @@
             <label for="project-file" class="set-project-file-label">Seleziona file</label>
             <button class="set-project-file-send btn-base">Carica</button>
 
-            <button class="btn-base btn-grey back">Indietro</button>
+            <button class="btn-base btn-grey back">&#8592;</button>
         </div>
     </script>
     <!-- END LANDING PAGE -->
@@ -46,38 +49,56 @@
     <!-- EDITOR -->
     <script type="text/template" id="editor-view">
         <div class="full-row">
-            <input type="text" class="project-name" value="Mio progetto" />
-            <button class="btn-base save-export">Salva progetto</button>
-            <button class="btn-base compile-code">Compila</button>   <!-- bottone complaz-->
+            <h2 class="project-name"></h2>
+            <button class="btn-base save-export align-right">Salva progetto</button>
+            <button class="btn-base compile-code align-right">Compila</button>   <!-- bottone complaz-->
         </div>
+
         <div class="full-row border-bottom breadcrumbs">
-            <span class="element-parent">parent</span>
-            <input type="text" class="selected-element" value="element" />
+            <span class="element-parent"></span>
+            <input type="text" class="selected-element" value="" />
             <button class="btn-base btn-red delete-element">Elimina</button>
             <button class="btn-base btn-grey exit-zoom hidden">Indietro</button>
         </div>
+
         <div class="full-row margin-top editor-container">
             <div class="toolbar toolbar-elements">
             </div>
-            <div class="editor"></div>
+            <div class="editor editor-main"></div>
+            <div class="editor editor-zoom"></div>
             <div class="toolbar toolbar-data">
             </div>
         </div>
+
         <div class="export-project-page full-screen hidden">
             <button class="btn-base save-project">Salva file .pro</button>
             <button class="btn-base btn-blue export-project">Esporta progetto</button>
 
-            <button class="btn-base btn-grey back">Indietro</button>
+            <button class="btn-base btn-grey back">&#8592;</button>
         </div>
     </script>
 
+    <script type="text/template" id="error-toolbar">
+        <button class="btn-base btn-red error-back">X</button>
+        <div class="clear"></div>
+        <ul class="error-list">
+        </ul>
+    </script>
+
+    <script type="text/template" id="error-row">
+        <span class="error-id"><%= errorNumber %></span> <%= errorSubject %> <%= errorName %>
+        <span class="like-link fix-it">correggi</span>
+        <br>
+        <%= errorDescr %>
+    </script>
+
     <script type="text/template" id="toolbar-element-view">
-        <div class="new-element"><img src="image/actor.svg" data-element="actor" /></div>
-        <div class="new-element"><img src="image/boundary.svg" data-element="boundary" /></div>
-        <div class="new-element"><img src="image/control.svg" data-element="control" /></div>
-        <div class="new-element"><img src="image/entity.svg" data-element="entity" /></div>
-        <div class="new-element"><img src="image/link.svg" data-element="link" /></div>
-        <div class="new-element"><img src="image/entity.svg" data-element="subEntity" /></div>
+        <div class="new-element draggable" title="Actor" data-element="actor"><img src="image/actor.png" /></div>
+        <div class="new-element draggable" title="Boundary" data-element="boundary"><img src="image/boundary.png" /></div>
+        <div class="new-element draggable" title="Control" data-element="control"><img src="image/control.png" /></div>
+        <div class="new-element draggable" title="Entity" data-element="entity"><img src="image/entity.png" /></div>
+        <div class="new-element clickable" title="Link" data-element="link"><img src="image/link.png" /></div>
+        <div class="new-element clickable" title="Sub entity" data-element="subEntity"><img src="image/entity.png" /></div>
     </script>
 
     <script type="text/template" id="toolbar-data-view">
@@ -91,26 +112,43 @@
 
     <script type="text/template" id="field-view">
         <!--<li class="field-row full-row">-->
-            <input type="text" class="field-name" value="nome" title="Nome campo" />
-            <button class="btn-base btn-red field-remove">X</button>
-            <select class="field-type" title="Tipo campo">
-                <option value="string" selected>String</option>
-                <option value="int">Int</option>
-            </select>
-            <input type="text" class="field-length" value="255" title="Lunghezza campo" />
-
-            <div class="clear"></div>
-            <div class="full-row float-left property-row">
-                <input type="checkbox" class="field-property" id="<%= fieldNumber %>-primarykey" name="primarykey" value="primaryKey" title="Primary key">
-                <label class="field-label" for="<%= fieldNumber %>-primarykey">PK</label>
-                <input type="checkbox" class="field-property" id="<%= fieldNumber %>-notnull" name="notnull" value="notNull" title="Not null">
-                <label class="field-label" for="<%= fieldNumber %>-notnull">NN</label>
-                <input type="checkbox" class="field-property" id="<%= fieldNumber %>-autoincrement" name="autoincrement" value="autoIncrement" title="Auto increment">
-                <label class="field-label" for="<%= fieldNumber %>-autoincrement">AI</label>
-                <input type="checkbox" class="field-property" id="<%= fieldNumber %>-defaultcheck" name="default" value="defaultCheck" title="Default">
-                <label class="field-label" for="<%= fieldNumber %>-defaultcheck">Def</label>
+            <button class="field-label-name">&#8595; <span class="field-label-name-content"></span> &#8595;</button>
+            <div class="data-input">
+                    <button class="hidden-attribute">&#8593; Nascondi &#8593;</button>
+                <input type="text" class="field-name" value="nome" title="Nome campo"  tabindex="<%= fieldNumber %>01"/>
+                <button class="btn-base btn-red field-remove" tabindex="<%= fieldNumber %>00">X</button>
+                <select class="field-type" title="Tipo campo" tabindex="<%= fieldNumber %>02">
+                        <optgroup label="Char type">
+                            <option value="varchar" selected>Varchar</option>
+                            <option value="tinytext">Tinytext</option>
+                            <option value="text">Text</option>
+                            <option value="mediumtext">Mediumtext</option>
+                            <option value="longtext">Longtext</option>
+                        </optgroup>
+                            <optgroup label="Int type">
+                            <option value="tinyint">Tinyint</option>
+                            <option value="int">Int</option>
+                            <option value="mediumint">Mediumint</option>
+                            <option value="bigint">Bigint</option>
+                        </optgroup>
+                        <optgroup label="Date type">
+                            <option value="date">Date</option>
+                        </optgroup>
+                    </select>
+                <input type="text" class="field-length" title="Lunghezza campo" tabindex="<%= fieldNumber %>03" />
+                <div class="clear"></div>
+                <div class="full-row float-left property-row">
+                    <input type="checkbox" class="field-property" id="<%= fieldNumber %>-primarykey" name="primarykey" value="primaryKey" title="Primary key">
+                    <label class="field-label" for="<%= fieldNumber %>-primarykey" tabindex="<%= fieldNumber %>04">PK</label>
+                    <input type="checkbox" class="field-property" id="<%= fieldNumber %>-notnull" name="notnull" value="notNull" title="Not null">
+                    <label class="field-label" for="<%= fieldNumber %>-notnull" tabindex="<%= fieldNumber %>05">NN</label>
+                    <input type="checkbox" class="field-property" id="<%= fieldNumber %>-autoincrement" name="autoincrement" value="autoIncrement" title="Auto increment">
+                    <label class="field-label" for="<%= fieldNumber %>-autoincrement" tabindex="<%= fieldNumber %>06">AI</label>
+                    <input type="checkbox" class="field-property" id="<%= fieldNumber %>-defaultcheck" name="default" value="defaultCheck" title="Default">
+                    <label class="field-label" for="<%= fieldNumber %>-defaultcheck" tabindex="<%= fieldNumber %>07">Def</label>
+                </div>
+                <input type="text" class="field-default" value="defaultText" title="Default value" disabled tabindex="<%= fieldNumber %>08"/>
             </div>
-            <input type="text" class="field-default" value="defaultText" title="Default value" />
             <div class="field-end"></div>
         <!--</li>-->
     </script>
@@ -124,12 +162,16 @@
     </script>
     <!--  END EXPORT -->
 
+    <!-- DEPENDENCIES -->
     <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/jquery-ui.js"></script>
     <script src="js/lib/underscore.js"></script>
     <script src="js/lib/lodash.js"></script>
     <script src="js/lib/backbone.js"></script>
     <script src="js/lib/joint.js"></script>
+    <script src="js/fieldTypes.js"></script>
 
+    <!-- MODELS -->
     <script src="js/models/appStates.js"></script>
     <script src="js/models/attributeType.js"></script>
     <script src="js/models/attribute.js"></script>
@@ -137,21 +179,48 @@
     <script src="js/models/elementType.js"></script>
     <script src="js/models/entity.js"></script>
     <script src="js/models/subEntity.js"></script>
+    <script src="js/models/errorModel.js"></script>
 
+    <!-- MODELS JOINT -->
+    <script src="js/models/elementBase.js"></script>
+    <script src="js/models/linkBase.js"></script>
+
+    <!-- COLLECTION -->
     <script src="js/collections/attributes.js"></script>
     <script src="js/collections/entities.js"></script>
     <script src="js/collections/subEntities.js"></script>
 
+    <script src="js/collections/error/errorEntity.js"></script>
+    <script src="js/collections/error/errorIllegalEntity.js"></script>
+    <script src="js/collections/error/errorEntities.js"></script>
+    <script src="js/collections/error/errorEntityAttributes.js"></script>
+
+    <script src="js/collections/error/errorSubentity.js"></script>
+    <script src="js/collections/error/errorIllegalSubentity.js"></script>
+    <script src="js/collections/error/errorSubentities.js"></script>
+    <script src="js/collections/error/errorSubentityAttributes.js"></script>
+
+    <script src="js/collections/error/errorAttribute.js"></script>
+    <script src="js/collections/error/errorIllegalAttribute.js"></script>
+
+    <script src="js/collections/error/errorGlobals.js"></script>
+    <script src="js/collections/type.js"></script>
+
+    <!-- VIEWS -->
     <script src="js/views/appView.js"></script>
     <script src="js/views/dataToolbarView.js"></script>
     <script src="js/views/elementToolbarView.js"></script>
-    <script src="js/views/exportView.js"></script>
     <script src="js/views/fieldView.js"></script>
     <script src="js/views/homeView.js"></script>
     <script src="js/views/robustnessDiagramView.js"></script>
+    <script src="js/views/errorRowView.js"></script>
+    <script src="js/views/errorView.js"></script>
 
+    <!-- Main and other -->
     <script src="js/helper.js"></script>
     <script src="js/router.js"></script>
+    <script src="js/errorFixer.js"></script>
+    <script src="js/dataValidator.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

@@ -4,6 +4,6 @@ var app = app || {};
     'use strict';
 
     app.Entities = Backbone.Collection.extend({
-        model: app.Entity
+        model: joint.shapes.basic.Entity
     });
 })();

@@ -24,7 +24,9 @@ footer, header, hgroup, menu, nav, section {
     display: block;
 }
 body {
+    overflow : hidden;
     line-height: 1;
+    font-size: 18px;
 }
 ol, ul {
     list-style: none;
@@ -53,7 +55,7 @@ table {
 }
 /* ------FINE RESET------- */
 
-/* Base structure */
+/* FONTS */
 @font-face {
     font-family: 'simplificasimplifica';
     src: url('font/simplifica-webfont.woff2') format('woff2'),
@@ -61,10 +63,64 @@ table {
     font-weight: normal;
     font-style: normal;
 }
+/* open-sans-regular - latin */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./font/open-sans-v15-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local('Open Sans Regular'), local('OpenSans-Regular'),
+    url('./font/open-sans-v15-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('./font/open-sans-v15-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+    url('./font/open-sans-v15-latin-regular.woff') format('woff'), /* Modern Browsers */
+    url('./font/open-sans-v15-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('./font/open-sans-v15-latin-regular.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
+/* open-sans-italic - latin */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: italic;
+    font-weight: 400;
+    src: url('./font/open-sans-v15-latin-italic.eot'); /* IE9 Compat Modes */
+    src: local('Open Sans Italic'), local('OpenSans-Italic'),
+    url('./font/open-sans-v15-latin-italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('./font/open-sans-v15-latin-italic.woff2') format('woff2'), /* Super Modern Browsers */
+    url('./font/open-sans-v15-latin-italic.woff') format('woff'), /* Modern Browsers */
+    url('./font/open-sans-v15-latin-italic.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('./font/open-sans-v15-latin-italic.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
+/* open-sans-700 - latin */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: url('./font/open-sans-v15-latin-700.eot'); /* IE9 Compat Modes */
+    src: local('Open Sans Bold'), local('OpenSans-Bold'),
+    url('./font/open-sans-v15-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('./font/open-sans-v15-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+    url('./font/open-sans-v15-latin-700.woff') format('woff'), /* Modern Browsers */
+    url('./font/open-sans-v15-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('./font/open-sans-v15-latin-700.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
+/* open-sans-700italic - latin */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: italic;
+    font-weight: 700;
+    src: url('./font/open-sans-v15-latin-700italic.eot'); /* IE9 Compat Modes */
+    src: local('Open Sans Bold Italic'), local('OpenSans-BoldItalic'),
+    url('./font/open-sans-v15-latin-700italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('./font/open-sans-v15-latin-700italic.woff2') format('woff2'), /* Super Modern Browsers */
+    url('./font/open-sans-v15-latin-700italic.woff') format('woff'), /* Modern Browsers */
+    url('./font/open-sans-v15-latin-700italic.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('./font/open-sans-v15-latin-700italic.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
 
+/* Base structure */
 input {
-    font-family: simplificasimplifica;
-    font-size: 22px;
+    font-family: 'Open Sans', sans-serif;
+    /*font-family: simplificasimplifica;*/
+    font-size: 18px;
     border: 0;
     padding: 5px 15px;
     cursor: pointer;
@@ -74,8 +130,13 @@ input {
     border-radius: 25px;*/
 }
 
+.field-default:disabled {
+    background: #ccc;
+  }
+
 body {
-    font-family: simplificasimplifica;
+    font-family: 'Open Sans', sans-serif;
+    /*font-family: simplificasimplifica;*/
     font-size: 22px;
 }
 
@@ -109,11 +170,18 @@ body {
     float: left;
 }
 
+.like-link {
+    cursor: pointer;
+    text-decoration: underline;
+    color: blue;
+}
+
 .btn-base {
     background: none;
     border: 0;
-    font-family: simplificasimplifica;
-    font-size: 30px;
+    font-family: 'Open Sans', sans-serif;
+    /*font-family: simplificasimplifica;*/
+    font-size: 20px;
     background-color: rgba(200,255,200, 1);
     padding: 5px 20px;
     opacity: 0.7;
@@ -125,7 +193,7 @@ body {
 
 .btn-red {
     background-color: rgba(255,200,200, 1);
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .btn-grey {
@@ -138,9 +206,16 @@ body {
 
 .back {
     position: absolute;
-    bottom: 0;
     left: 0;
-    width: 100%;
+    top: 0;
+    padding: 5px 20px 15px 20px;
+    font-size: 40px;
+}
+
+.error-back {
+    float: right;
+    font-size: 12px;
+    padding: 2px 10px;
 }
 
 .border-bottom {
@@ -155,9 +230,9 @@ footer {
     width: 100%;
     background-color: #444444;
     color: #ffffff;
-    padding: 20px 0;
+    padding: 10px 0;
     text-align: center;
-    font-size: 25px;
+    font-size: 16px;
 }
 
 .hidden:not(.show) {
@@ -165,6 +240,7 @@ footer {
 }
 
 .header h1 {
+    font-family: simplificasimplifica;
     float: left;
 }
 
@@ -174,7 +250,11 @@ footer {
 }
 
 .compile-code{
-    margin: 0 1em;
+    margin: 0 5px;
+}
+
+.align-right {
+    float: right;
 }
 
 /* END Base structure */
@@ -210,7 +290,8 @@ footer {
     margin-top: 100px;
     min-width: 500px;
     text-align: center;
-    font-size: 40px;
+    font-size: 30px;
+    cursor: pointer;
 }
 
 .set-project-file {
@@ -225,7 +306,7 @@ footer {
 .set-project-name-send,
 .set-project-file-send {
     display: block;
-    font-size: 40px;
+    font-size: 30px;
     width: 530px;
     margin: 10px auto 0 auto;
 }
@@ -233,10 +314,16 @@ footer {
 
 /* editor structure */
 .project-name {
-    font-size: 30px;
-    margin-bottom: 5px;
-    /*width: calc(100% - 30px);*/
+    display: inline-block;
+    font-size: 20px;
+    margin-bottom: 10px;
     float: left;
+    line-height: 30px;
+    min-width: 10px;
+}
+
+.breadcrumbs {
+    background-color: #f0f0f0;
 }
 
 .save-project, .export-project {
@@ -250,6 +337,7 @@ footer {
 }
 
 .element-parent {
+    font-size: 18px;
     margin-left: 15px;
 }
 .element-parent:after {
@@ -258,15 +346,23 @@ footer {
 }
 
 .selected-element {
+    border: 1px solid rgba(0,0,0,0);
+    margin: -1px;
     background-color: transparent;
     border-radius: 0;
-    width: 500px;
+    width: 600px;
+}
+.selected-element:focus {
+    border: 1px solid rgba(0,0,0,0.2);
+}
+.selected-element[disabled] {
+    cursor: default;
 }
 
 
 .delete-element {
     float: right;
-    font-size: 30px;
+    font-size: 20px;
 }
 .exit-zoom {
     float: right;
@@ -279,7 +375,10 @@ footer {
 }
 
 .toolbar-elements {
-    width: 180px;
+    width: 90px;
+    max-height: calc(100% - 20px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .toolbar-data {
@@ -293,13 +392,20 @@ footer {
 .editor {
     float: left;
     min-height: 100px;
-    width: calc(98% - 210px);
+    width: calc(98% - 100px);
     background-color: rgba(240,240,240,0.5);
-    border: 1px solid black;
+    border: 1px solid rgba(0,0,0,0.1);
+    margin-right: -1px;
 }
 
+.editor-container:not(.zoom-mode) .editor-zoom {  display: none; }
+.editor-container.zoom-mode .editor-main {  display: none; }
+
+/* .edicon{
+    overflow: auto;
+} */
 .editor-container.zoom-mode .editor {
-    width: calc(99% - 460px);
+    width: calc(99% - 360px);
 }
 
 .new-element {
@@ -308,14 +414,15 @@ footer {
     padding: 10px;
     float: left;
     cursor: pointer;
+    z-index: 10;
 }
 
 .new-element img {
     max-width: 100%;
     max-height: 100%;
 }
-.new-element img.disabled {
-    opacity: 0.6;
+.new-element.disabled {
+    display: none;
 }
 .new-element:hover img:not(.disabled) {
     margin: -10px;
@@ -327,7 +434,7 @@ footer {
 
 .new-field {
     float: right;
-    margin: 0 0.8em;
+    margin: 0;
 }
 
 .fields-container {
@@ -342,27 +449,55 @@ footer {
 }
 
 .field-name {
-    width: calc(100% - 90px);
+    width: calc(100% - 80px);
+    margin-right: -1px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 0px 10px;
+}
+.field-remove {
+    padding: 1px 20px;
+}
+.hidden-attribute,
+.field-label-name {
+    background: none;
+    border: none;
+    width: 100%;
 }
 .field-default {
+    padding-top: 0;
+    padding-bottom: 0;
     width: calc(100% - 30px);
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    margin: 0 -2px;
+}
+.field-default.closed{
+    display:none;
 }
 
 .field-type {
-    font-family: simplificasimplifica;
+    font-family: 'Open Sans', sans-serif;
+    /*font-family: simplificasimplifica;*/
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    border-color: #f0f0f0;
-    width: 70%;
+    border-color: #e0e0e0;
+    width: calc(100% - 58px);
+    margin-right: -1px;
+    /*width: 70%;*/
     text-align-last: center;
-    padding: 5px 0;
-    font-size: 20px;
+    padding: 0;
+    font-size: 18px;
     margin-top: 5px;
 }
 
 .field-length {
-    width: calc(30% - 40px);
+    padding: 1px 5px;
+    width: calc(30% - 23px);
+}
+.field-length.closed{
+    visibility: hidden;
 }
 
 .property-row {
@@ -385,17 +520,18 @@ footer {
     border: 0;
     width: 25%;
     color: #999;
-    line-height: 50px;
+    line-height: 30px;
     text-align: center;
     float: left;
+    font-size: 18px;
 }
 .field-label:hover {
     color: #444;
-    font-size: 25px;
+    font-size: 20px;
 }
 .field-label.checked {
     font-weight: bold;
-    font-size: 25px;
+    font-size: 20px;
     color: #444;
     background-color: rgba(200,255,200, 1);
 }
@@ -403,8 +539,38 @@ footer {
 .field-end {
     float: left;
     width: 100%;
-    height: 1px;
+    height: 3px;
     background-color: #afeeee;
     margin-top: 5px;
 }
+
+.field-row .field-label-name {display: none;}
+
+.field-row.closed .field-label-name {display:block;}
+
+.field-row.closed .data-input {display:none;}
+
 /* END editor structure */
+
+/* error toolbar */
+.error-toolbar {
+    background-color: #fff;
+    height: 205px;
+    position: relative;
+    padding: 10px 0 10px 0;
+    font-size: 18px;
+    border-top: 1px solid #e0e0e0;
+    margin-top: -1px;
+}
+.error-list {
+    overflow-y: scroll;
+    max-height: calc(100% - 15px);
+}
+
+.error-row {    line-height: 20px;  }
+.error-row:hover { background-color: #f0f0f0; }
+.error-row.type-error .error-id     { color: #F33636; }
+.error-row.type-alert .error-id     { color: #FF9933; }
+.error-row.type-log .error-id       { color: #6B7C93; }
+
+/* END error toolbar */

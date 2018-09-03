@@ -27,28 +27,48 @@ var app = app || {};
 
         eventNewField: function() {
             if (this.currentEntity) {
-                let newField = new app.FieldView(this.counterAttributes);
+                let newField = new app.FieldView(this.counterAttributes,false);
                 this.counterAttributes++;
                 let newFieldModel = new app.Attribute();
                 this.currentEntity.get('attr').add(newFieldModel);
                 newField.loadAttribute(newFieldModel);
-                this.$('.fields-container').append(newField.render());
+                this.addFieldView(newField);
+                newField.focusName();
             }
         },
+
         eventLoadEntity: function(entity) {
-            console.log(entity);
             this.$container.html('');
             this.currentEntity = entity;
-            let attributes = this.currentEntity.get('attr');
+            let attributes = this.currentEntity.getAttributes();
+            let howMany = attributes.length;
 
-            for(var i=0; i<attributes.length; i++) {
+            for(var i=0; i<howMany; i++) {
                 let attribute = attributes.models[i];
-                let newField = new app.FieldView(this.counterAttributes);
+                let newField = new app.FieldView(this.counterAttributes, howMany>2);
                 this.counterAttributes++;
                 newField.loadAttribute(attribute);
-                this.$('.fields-container').append(newField.render());
+                this.addFieldView(newField);
             }
-        }
+        },
 
+        addFieldView: function(newField) {
+            this.$('.fields-container').append(newField.render());
+            this.listenTo(newField, 'pkChanged', this.checkRelation);
+        },
+
+        checkRelation: function(target = false) {
+            if (target === false)
+                target = this.currentEntity;
+
+            if (target.getType() === 'entity')
+                return;
+
+            let counted = target.countPK();
+            if (counted > 0)
+                this.trigger('setRelation', {type: '1-N'});
+            else
+                this.trigger('setRelation', {type: '1-1'});
+        }
     });
 })(jQuery);

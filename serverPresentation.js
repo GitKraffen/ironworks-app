@@ -1,5 +1,6 @@
 var ApplicationController = require('./serverApplication');
 var Archiver = require('archiver');
+var fs = require('fs');
 
 //const path = require('path');
 //let fs = require('fs');
@@ -25,6 +26,7 @@ module.exports = class PresentationController {
         this.app.post('/', (req, res) => res.sendFile(this.resourcesPath + 'index.html'));
         this.app.post('/compile', (req, res) => this.compileRequest(req, res));
         this.app.post('/export', (req, res) => this.exportRequest(req, res));
+        this.app.use('/ee/:id', (req, res) => this.imageRequest(req, res));
         this.app.use("*", (req,res) => res.sendFile(this.resourcesPath + "404.html"));
 
     }
@@ -35,18 +37,28 @@ module.exports = class PresentationController {
         res.send(returnData);
     }
     exportRequest(req, res) {
-        let toReturn = this.serverApp.getZip(JSON.parse(req.body.data));
-        var zip = Archiver('zip');
+        let toReturn = this.serverApp.getZip(req.body.name, JSON.parse(req.body.data));
+        let zip = Archiver('zip');
         res.header('Content-Disposition', 'attachment; filename="' + req.body.name + '.zip"');
         // Send the file to the page output.
         zip.pipe(res);
         // Create zip with some files. Two dynamic, one static. Put #2 in a sub folder.
         for(let key in toReturn) {
-            zip.append(toReturn[key], {name: 'file'+key+'.'+key});
+            zip.append(toReturn[key], {name: key});
         }
         zip.append(req.body.pro, {name: req.body.name + '.pro'});
         zip.finalize();
 
+    }
+
+    imageRequest(req, res) {
+        var file = __dirname + '/public/image/ee' + req.params.id +'.lala';
+
+        res.setHeader('Content-disposition', 'attachment; filename=ee'+ req.params.id +'.png');
+        res.setHeader('Content-type', 'image/png');
+
+        var filestream = fs.createReadStream(file);
+        filestream.pipe(res);
     }
 
     startServer() {

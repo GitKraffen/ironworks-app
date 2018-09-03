@@ -10,25 +10,38 @@ var app = app || {};
 
         events: {
             'change .field-property': 'eventPropertySelect',
+            'keydown .field-label': 'test',
             'change .field-type': 'eventTypeSelect',
-            'change .field-name': 'eventNameChange',
-            'change .field-length': 'eventLengthChange',
-            'change .field-default': 'eventDefaultChange',
-            'click .field-remove': 'eventRemove'
+            'keyup .field-name': 'eventNameChange',
+            'keyup .field-length': 'eventLengthChange',
+            'keyup .field-default': 'eventDefaultChange',
+            'click .field-remove': 'eventRemove',
+            'click .field-label-name' : 'eventOpenAttribute',
+            'click .hidden-attribute' : 'eventCloseAttribute'
         },
 
-        initialize: function(attributeNumber) {
+        initialize: function(attributeNumber,hidden=true) {
             // Initialize
             this.attribute = new app.Attribute();
 
             this.$el.html(this.template({'fieldNumber':attributeNumber}));
-
             this.$setFieldProperty = this.$('.field-property');
             this.$setFieldType = this.$('.field-type');
             this.$setFieldName = this.$('.field-name');
+            this.$setFieldLabelName = this.$('.field-label-name-content');
             this.$setFieldLenght = this.$('.field-length');
             this.$setFieldDefault = this.$('.field-default');
             this.$setFieldRemove = this.$('.field-view');
+
+            this.$hidden=hidden;
+        },
+
+        test: function(e) {
+            switch (e.key) {
+                case ' ':
+                case 'Enter':
+                    $(e.target).click().focus();
+            }
         },
 
         render: function() {
@@ -40,27 +53,43 @@ var app = app || {};
 
             // Settare la grafica in base ai dati
             this.$setFieldName.val(this.attribute.getName());
-            this.$setFieldLenght.val(this.attribute.getLength());
             this.$setFieldType.val(this.attribute.getType());
+            this.closeLengthButton(this.attribute.getType());
             this.$setFieldDefault.val(this.attribute.getdefault());
-            console.log(1);
-            console.log(this.attribute.getdefault());
+
+            this.$setFieldLabelName.html(this.attribute.getName());
 
             this.$('.field-property').each(function( i, item ) {
                 let chkbox = $(item);
                 chkbox.prop( "checked", this.attribute.getProperty(chkbox.attr('value')) );
-                let appo = this.attribute.getProperty(chkbox.attr('value'));
-                if (appo)
+                if (this.attribute.getProperty(chkbox.attr('value'))) {
                     this.$('.field-label[for="'+chkbox.attr('id')+'"]').addClass('checked');
-
+                    if (chkbox.attr('name') === 'default')
+                        this.$setFieldDefault.prop('disabled', false);
+                }
 
             }.bind(this));
+
+            if(this.$hidden === true){
+                this.$el.addClass('closed');
+            }
         },
 
-    eventPropertySelect: function(event) {
-        let $element = $(event.target);
-        console.log($element);
-        // toggle class on label
+        closeLengthButton : function(typeName){
+            if (app.fieldTypes[typeName].maxLength !== undefined) {
+                this.$setFieldLenght.val(this.attribute.getLength());
+                this.$setFieldLenght.removeClass('closed');
+            }else
+                this.$setFieldLenght.addClass('closed');
+        },
+
+        focusName: function() {
+            this.$setFieldName.focus().select();
+        },
+
+        eventPropertySelect: function(event) {
+            let $element = $(event.target);
+            // toggle class on label
             let id  = $element.attr('name');
             let $label = this.$('label[for="' + $element.attr('id') + '"]');
             if ($element.is(':checked'))
@@ -71,16 +100,28 @@ var app = app || {};
                 this.$('.field-default').prop('disabled', !$element.is(':checked'));
 
             this.attribute.setProperty($element.attr('value'), $element.is(':checked'));
-            // TODO: da fare
+
+            if (id === 'primarykey')
+                this.trigger('pkChanged');
         },
 
         eventTypeSelect: function() {
             // TODO: ENUM da mettere
             this.attribute.setType(this.$setFieldType.val());
+            this.closeLengthButton(this.attribute.getType());
+            let type= app.type.findWhere({name: this.attribute.getType()});
+            if(type.getCategory() === 'text'){
+                this.attribute.setLength('64');
+            }
+            else{
+                this.attribute.setLength(false);
+            }
+            this.$setFieldLenght.val(this.attribute.getLength());
         },
 
         eventNameChange: function() {
             this.attribute.setName(this.$setFieldName.val());
+            this.$setFieldLabelName.html(this.$setFieldName.val());
         },
 
         eventLengthChange: function() {
@@ -95,6 +136,13 @@ var app = app || {};
             //this.$setFieldRemove.remove();
             this.attribute.destroy();
             this.remove();
+        },
+        eventOpenAttribute: function() {
+            this.$el.removeClass('closed');
+            this.focusName();
+        },
+        eventCloseAttribute: function(){
+            this.$el.addClass('closed');
         }
 
     });

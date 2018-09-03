@@ -1,0 +1,40 @@
+ERROR LIST
+
+attribute:
+Il nome di un attributo non può essere nullo,
+Il nome di un attributo non può contenere caratteri illegali,
+Un attributo non può avere lunghezza negativa o pari a 0,
+Un attributo è Auto Increment non può definire un default,
+Il tipo di default è incompatibile con il tipo scelto,
+La lunghezza del valore di default è maggiore della lunghezza definita
+Non è stato definito alcun tipo per questo attributo,
+Attributo autoincrement non marcato come PK,
+Non è stato definito alcun tipo per il campo dato,
+Attributo autoincrement non marcato come PK,
+Si è definito questo attributo NN anche se risulta avere come valore di default NULL,
+Si è definito un default contenente caratteri illegali,
+Si è inserito un valore di default senza che sia stata attivata la proprietà default
+
+entity
+Il nome di una entità non può essere nullo,
+Il nome di una entità non può contenere caratteri illegali,
+Non è presente alcun attributo
+
+entity attributes:
+Attributo con lo stesso nome già esistente,
+Data una collection di attributi non è presente una Primary key,
+Sono presenti più di un Autoincrement nella entity corrente,
+
+entities:
+Entità con lo stesso nome
+
+subentity
+Il nome di una entità non può essere nullo,
+Il nome di una entità non può contenere caratteri illegali,
+
+subentity attributes:
+Attributo con lo stesso nome già esistente,
+Sono presenti più di un Autoincrement nella entity corrente,
+
+subentities:
+Entità con lo stesso nome
